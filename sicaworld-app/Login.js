@@ -1,8 +1,7 @@
-import {Button, StyledButton, ButtonText} from 'react-native';
-import { Fontisto } from "@expo/vector-icons";
+import {Button, StyleSheet, View, Text} from 'react-native';
 import * as Google from 'expo-google-app-auth';
 import { useState } from 'react';
-import { ScreenContainer } from 'react-native-screens';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
     const [googleSubmitting, setGoogleSubmitting] = useState(false);
@@ -22,7 +21,17 @@ const Login = ({ navigation }) => {
                 if(type=='success'){
                     const {email, name} = user;
                     console.log('Google signin successful');
-                    console.log('Email:'+email+' Name:'+name);
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ usernameEmail: email })
+                    };
+                    fetch('https://fansconnect-idol.azurewebsites.net/api/login', requestOptions)
+                        .then(response => response.json())
+                        .then(data => {
+                        AsyncStorage.setItem('@logonUser', JSON.stringify(data));
+                        navigation.navigate('Home', {refresh: true});
+                    });
                 }else{
                     console.log('Google signin was cancelled');
                 }
@@ -35,11 +44,28 @@ const Login = ({ navigation }) => {
     }
 
     return (
-        <Button
-            title="Sign in with Google"
-            onPress={handleGoogleSignIn}
-        />
+        <View style={styles.container}>
+            <Text style={styles.title}>$ICAPP</Text>
+            <Button
+                title="Sign in with Google"
+                onPress={handleGoogleSignIn}
+            />
+        </View>
     );
-  }
-  
+  };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#000',
+        alignItems: 'center'
+    },
+    title: {        
+        fontSize: 36,
+        fontWeight: 'bold',
+        color: '#fff',
+        margin: 10
+    }
+});
+
 export {Login};

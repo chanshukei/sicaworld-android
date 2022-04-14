@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View, StyleSheet, Image } from 'react-native';
+import { ActivityIndicator, FlatList, Text, View, StyleSheet, Image, Button } from 'react-native';
 
 const Shop = ({ navigation, route }) => {
   const [isLoading, setLoading] = useState(true);
@@ -23,11 +23,14 @@ const Shop = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {isLoading ? <ActivityIndicator/> : (
+      <Text style={{backgroundColor: 'white', color: 'blue', textAlign:'right', textDecorationLine: 'underline'}}
+            onPress={() => {navigation.navigate('MyOrders')}}>我的購買紀錄</Text>
+      <Text style={{color: '#fff', fontSize: 16, textAlign: 'center', fontWeight: 'bold', margin: 5}}>所有應援物</Text>
+      {isLoading ? <ActivityIndicator/> : (        
         <FlatList
           data={data}
-          keyExtractor={({ id }, index) => id}
-          renderItem={({ item }) => (
+          keyExtractor={(item) => item.itemId}
+          renderItem={({ item }) => (            
             <View style={styles.itemContainer}>
               <Text style={styles.title}>{item.itemName}</Text>
               <Image 
