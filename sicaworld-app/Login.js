@@ -30,6 +30,7 @@ const Login = ({ navigation }) => {
                         .then(response => response.json())
                         .then(data => {
                         AsyncStorage.setItem('@logonUser', JSON.stringify(data));
+                        AsyncStorage.removeItem('@shoppingCart');
                         navigation.navigate('Home', {refresh: true});
                     });
                 }else{

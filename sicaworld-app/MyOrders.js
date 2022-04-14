@@ -19,8 +19,18 @@ const MyOrders = ({ navigation, route }) => {
         fetch('https://fansconnect-idol.azurewebsites.net/api/myorders/1?code=/cT6tf0KJhp5aOuV8cYXyEdXC6SwIDhWtLazJyoaXnbevH3lVRUWjw==', requestOptions)
             .then(response => response.json())
             .then(data => {
-              console.log(data);
-              setData(data);
+              var count = data.length;
+              data.forEach(element => {
+                fetch('https://fansconnect-idol.azurewebsites.net/api/orderlines/'+element.orderId+'?code=zSlD7g/44S4LmrVdNQjTnunIrr3GCB5B3KaRZxFoWtnVp3hJWWPsLQ==')
+                  .then(response => response.json())
+                  .then(data2 => {
+                    element.orderLines = data2;
+                    count--;
+                    if(count==0){
+                      setData(data);
+                    }
+                  });
+              });
             });
       }
     } catch (error) {
@@ -45,11 +55,15 @@ const MyOrders = ({ navigation, route }) => {
               <Text style={styles.title}>{item.createDate.substring(0, 10)}</Text>
               <FlatList 
                 data={item.orderLines}
-                keyExtractor={(item) => item.orderLineId}
+                keyExtractor={(item) => item.lineId}
                 renderItem={({item}) => (
-                  <Text>{item.itemName}</Text>
+                  <Text>{item.itemName} x {item.itemCount} ${item.totalAmount}</Text>
                 )}
               />
+              <Text style={styles.link}
+                    onPress={() => {
+                      Linking.openURL("https://fansconnect-idol.azurewebsites.net/api/orderimage/" + item.orderId + "?code=shj0Rkq93vQ0jHmV8Z8alfUCcQrHdysOaZBw0od/8yD4/chO3LwAyg==");
+                    }}>下載入數紙</Text>
             </View>
           )}
         />
@@ -81,6 +95,20 @@ const styles = StyleSheet.create({
   },
   descr: {
     fontSize: 10
+  },
+  link: {
+    color: '#fff',
+    backgroundColor: 'green',
+    margin: 10,
+    padding: 10,
+    fontSize: 18    
+  },
+  qr: {
+    color: '#fff',
+    backgroundColor: 'blue',
+    margin: 10,
+    padding: 10,
+    fontSize: 18
   }
 });
 

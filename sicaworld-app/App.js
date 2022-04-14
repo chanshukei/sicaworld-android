@@ -8,6 +8,7 @@ import { Support } from './Support';
 import { Events } from './Events';
 import { Login } from './Login';
 import { MyOrders } from './MyOrders';
+import { Payment } from './Payment';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ export default function App() {
           options={{ title: '登入' }}
         />
         <Stack.Screen name="Shop" component={Shop} options={{ title: '應援物市集' }}/>
+        <Stack.Screen name="Payment" component={Payment} options={{ title: '付款' }}/>
         <Stack.Screen name="MyOrders" component={MyOrders} options={{ title: '我的購買紀錄' }}/>
         <Stack.Screen name="Support" component={Support} options={{ title: '應援表' }}/>
         <Stack.Screen name="Events" component={Events} options={{ title: '事件簿' }}/>
