@@ -116,8 +116,6 @@ const Shop = ({ navigation, route }) => {
       <Text style={styles.menu}
             onPress={() => {navigation.navigate('MyOrders')}}>我的購買紀錄</Text>
       <Text style={styles.shopTitle}>所有應援物</Text>
-      <Text style={styles.pay}
-            onPress={() => {payment}}>付款 ({totalItemCount})</Text>
       {isLoading ? <ActivityIndicator/> : (
         <FlatList
           data={data}

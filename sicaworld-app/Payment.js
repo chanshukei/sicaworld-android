@@ -1,11 +1,26 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View, StyleSheet, Image, Button, Linking } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 const Payment = ({ navigation, route }) => {
   const [isLoading, setLoading] = useState(true);
   const [shoppingCart, setShoppingCart] = useState([]);
-  
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      quality: 1,
+    });
+    console.log(result);
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
   const getShoppingCart = async () => {
      try {
       var shoppingCartStr = await AsyncStorage.getItem('@shoppingCart');
@@ -37,9 +52,12 @@ const Payment = ({ navigation, route }) => {
           )}
         />
       )}
-      <View style={styles.item}>
-        <Text style={styles.title}>入數紙</Text>
-        <Button title='完成'/>
+      <View style={{flex: 2, alignItems: 'center', backgroundColor: '#fff', padding: 10}}>
+        <Text style={styles.shopTitle}>付款表格</Text>
+        {!image && <Button title="提供圖片證明" onPress={pickImage} />}
+        {image && <Button title="更換圖片證明" onPress={pickImage} />}
+        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+        <Button disabled={!image} title='完成付款'/>
       </View>
     </View>
   );
@@ -73,7 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 10
   },
   shopTitle: {
-    color: '#fff', 
+    color: '#000', 
     fontSize: 16, 
     textAlign: 'center', 
     fontWeight: 'bold'
