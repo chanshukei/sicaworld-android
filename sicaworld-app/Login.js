@@ -5,13 +5,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
     const [googleSubmitting, setGoogleSubmitting] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     
     const handleGoogleSignIn = () => {
         setGoogleSubmitting(true);
 
         const config = {
-            androidClientId: '941729682379-3jfperv7ae155ttm3k9cs2qlkrd71406.apps.googleusercontent.com',
-            iosClientId: '941729682379-uf3ns9n8udfgou5qhegjtd0gsfd8pie7.apps.googleusercontent.com',
+            clientId: '941729682379-3jfperv7ae155ttm3k9cs2qlkrd71406.apps.googleusercontent.com',
+            clientId: '941729682379-3jfperv7ae155ttm3k9cs2qlkrd71406.apps.googleusercontent.com',
             scopes: ['profile', 'email'],
         };
         
@@ -21,6 +22,7 @@ const Login = ({ navigation }) => {
                 if(type=='success'){
                     const {email, name} = user;
                     console.log('Google signin successful');
+                    setErrorMessage('Google signin successful');
                     const requestOptions = {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -51,6 +53,7 @@ const Login = ({ navigation }) => {
                 title="Sign in with Google"
                 onPress={handleGoogleSignIn}
             />
+            <Text style={{color: '#fff'}}>{{errorMessage}}</Text>
         </View>
     );
   };

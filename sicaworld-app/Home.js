@@ -1,13 +1,14 @@
-import {StyleSheet, Text, Image, View, TextInput, Button} from 'react-native';
+import {StyleSheet, Text, Image, View, TextInput, Button, AppState} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import * as AuthSession from 'expo-auth-session';
+import * as Google from 'expo-google-app-auth';
 
 const Home = ({ navigation, route }) => {
     const [user, setUser] = useState(null);
     const [isLogon, setLogon] = useState(false);
     const [isLoading, setLoading] = useState(false);
-    
+    const [googleSubmitting, setGoogleSubmitting] = useState(false);
+
     const logout = () =>{
         AsyncStorage.removeItem('@logonUser');
         setUser(null);
@@ -16,43 +17,47 @@ const Home = ({ navigation, route }) => {
 
     const login = async () => {
         setLoading(true);
+        handleGoogleSignIn();
+    };
+
+    const handleGoogleSignIn = () => {
+        setGoogleSubmitting(true);
 
         const config = {
-            androidClientId: '941729682379-3jfperv7ae155ttm3k9cs2qlkrd71406.apps.googleusercontent.com',
             iosClientId: '941729682379-uf3ns9n8udfgou5qhegjtd0gsfd8pie7.apps.googleusercontent.com',
-            scopes: ['profile', 'email'],
+            androidClientId: '941729682379-3jfperv7ae155ttm3k9cs2qlkrd71406.apps.googleusercontent.com',
+            clientId: '941729682379-3jfperv7ae155ttm3k9cs2qlkrd71406.apps.googleusercontent.com',
+            scopes: ['profile', 'email']
         };
         
-        const result = await Google.logInAsync(config)
-        .then((result) =>{
-            const{type, user} = result;
-            if(type=='success'){
-                const {email, name} = user;
-                console.log('Google signin successful');
-                const requestOptions = {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ usernameEmail: email })
-                };
-                fetch('https://fansconnect-idol.azurewebsites.net/api/login', requestOptions)
-                    .then(response => response.json())
-                    .then(data => {
-                    setUser(data);
-                    AsyncStorage.setItem('@logonUser', JSON.stringify(data));
-                    AsyncStorage.removeItem('@shoppingCart');
-                    setLogon(true);
-                    setLoading(false);
-                });
-            }else{
-                console.log('Google signin was cancelled');
-                setLoading(false);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            setLoading(false);
-        });
-    };
+        Google.logInAsync(config)
+            .then((result) =>{
+                const{type, user} = result;
+                if(type=='success'){
+                    const {email, name} = user;
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ usernameEmail: email })
+                    };
+                    fetch('https://fansconnect-idol.azurewebsites.net/api/login', requestOptions)
+                        .then(response => response.json())
+                        .then(data => {
+                        setUser(data);
+                        AsyncStorage.setItem('@logonUser', JSON.stringify(data));
+                        AsyncStorage.removeItem('@shoppingCart');
+                        setLogon(true);
+                    });
+                }else{
+                    console.log('Google signin was cancelled');
+                }
+                setGoogleSubmitting(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setGoogleSubmitting(false);
+            });
+    }
 
     const getUser = async () => {
         var logonUserStr = await AsyncStorage.getItem('@logonUser');
@@ -64,9 +69,9 @@ const Home = ({ navigation, route }) => {
         }
     };
 
-    useEffect(() => {
+    useEffect(async() => {
         getUser();
-    }, []);
+    },[]);
     
     return (
         <View style={styles.container}>
@@ -103,7 +108,6 @@ const Home = ({ navigation, route }) => {
                     <Button title='登入' onPress={login} />
                 )
             }
-
         </View>
     );
 };
