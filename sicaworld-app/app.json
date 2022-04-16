@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "mycoolredirect",
     "name": "$ICAPP",
     "slug": "sicaworld-app",
     "version": "1.0.0",
@@ -18,19 +19,19 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.yourappname",
+      "bundleIdentifier": "com.sicworld.sicaworld",
       "buildNumber": "1.0.0"
     },
     "android": {
       "package": "com.sicaworld.sicaworld",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo.png"
     },
     "description": "",
     "plugins": [

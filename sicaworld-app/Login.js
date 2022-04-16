@@ -31,7 +31,7 @@ const Login = ({ navigation }) => {
                         .then(data => {
                         AsyncStorage.setItem('@logonUser', JSON.stringify(data));
                         AsyncStorage.removeItem('@shoppingCart');
-                        navigation.navigate('Home', {refresh: true});
+                        navigation.navigate('Home');
                     });
                 }else{
                     console.log('Google signin was cancelled');
