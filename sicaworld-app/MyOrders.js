@@ -7,6 +7,7 @@ const MyOrders = ({ navigation, route }) => {
   const [data, setData] = useState([]);
   
   const getMyOrders = async () => {
+    setLoading(true);
      try {
       var logonUserStr = await AsyncStorage.getItem('@logonUser');
       if(logonUserStr!='' && logonUserStr!=null){
@@ -28,6 +29,7 @@ const MyOrders = ({ navigation, route }) => {
                     count--;
                     if(count==0){
                       setData(data);
+                      setLoading(false);                      
                     }
                   });
               });
@@ -36,7 +38,6 @@ const MyOrders = ({ navigation, route }) => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
     }
   }
 

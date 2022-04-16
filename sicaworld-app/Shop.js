@@ -16,7 +16,8 @@ const Shop = ({ navigation, route }) => {
   }
 
   const getShopItems = async () => {
-     try {
+    console.log('getShopItems');
+    try {
       const response = await fetch('https://fansconnect-idol.azurewebsites.net/api/shopitems/1?code=gY3gS52DMMJ8QUqAcRCtgfObruy9F0A6WuZghcaeOppC17PkB6CBQQ==');
       const json = await response.json();
       json.forEach(element => {
