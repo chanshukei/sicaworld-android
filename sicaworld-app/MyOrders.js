@@ -21,6 +21,7 @@ const MyOrders = ({ navigation, route }) => {
             .then(response => response.json())
             .then(data => {
               var count = data.length;
+              alert(data.length);
               data.forEach(element => {
                 fetch('https://fansconnect-idol.azurewebsites.net/api/orderlines/'+element.orderId+'?code=zSlD7g/44S4LmrVdNQjTnunIrr3GCB5B3KaRZxFoWtnVp3hJWWPsLQ==')
                   .then(response => response.json())
