@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "812412379131",
+    "project_id": "sicapp-524",
+    "storage_bucket": "sicapp-524.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812412379131:android:e0141fa24ce3476b16755e",
+        "android_client_info": {
+          "package_name": "com.sicaworld.sicaworld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "812412379131-l8nulaj0v7f7d4nv85pl76s2e21aiki0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgyl05T9506lbBGnwUPl2_HH-utnW0eUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "812412379131-l8nulaj0v7f7d4nv85pl76s2e21aiki0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

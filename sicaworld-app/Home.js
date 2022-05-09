@@ -62,8 +62,19 @@ const Home = ({ navigation, route }) => {
     const getUser = async () => {
         var logonUserStr = await AsyncStorage.getItem('@logonUser');
         if(logonUserStr!='' && logonUserStr!=null){
-            setUser(JSON.parse(logonUserStr));
-            setLogon(true);
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: logonUserStr
+            };
+            fetch('https://fansconnect-idol.azurewebsites.net/api/login', requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                setUser(data);
+                AsyncStorage.setItem('@logonUser', JSON.stringify(data));
+                AsyncStorage.removeItem('@shoppingCart');
+                setLogon(true);
+            });
         }else{
             setLogon(false);
         }

@@ -5,13 +5,41 @@ import { ActivityIndicator, FlatList, Text, View, StyleSheet, Image, Button, Lin
 const MyOrders = ({ navigation, route }) => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+
+  const generateQrCode = async (item) => {
+    setLoading(true);
+    try {
+      var logonUserStr = await AsyncStorage.getItem('@logonUser');
+      var userObj = JSON.parse(logonUserStr);
+      var reqestObj = {
+        orderId: item.orderId,
+        sessionId: userObj.sessionId,
+        createBy: userObj.usernameEmail,
+        idolId: 1,
+        qrCode: ''
+      };
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reqestObj)
+      };
+      fetch('https://sicaworld-shop20220415230146.azurewebsites.net/api/qrcode/1', requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        AsyncStorage.setItem('@myOrderQrCode', JSON.stringify(data));
+        navigation.navigate('MyOrderQrCode');
+      });
+   } catch (error) {
+     console.error(error);
+   } finally {
+   }
+  }
   
   const getMyOrders = async () => {
     setLoading(true);
      try {
       var logonUserStr = await AsyncStorage.getItem('@logonUser');
       if(logonUserStr!='' && logonUserStr!=null){
-        console.log(logonUserStr);
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -21,7 +49,6 @@ const MyOrders = ({ navigation, route }) => {
             .then(response => response.json())
             .then(data => {
               var count = data.length;
-              alert(data.length);
               data.forEach(element => {
                 fetch('https://fansconnect-idol.azurewebsites.net/api/orderlines/'+element.orderId+'?code=zSlD7g/44S4LmrVdNQjTnunIrr3GCB5B3KaRZxFoWtnVp3hJWWPsLQ==')
                   .then(response => response.json())
@@ -66,6 +93,10 @@ const MyOrders = ({ navigation, route }) => {
                     onPress={() => {
                       Linking.openURL("https://fansconnect-idol.azurewebsites.net/api/orderimage/" + item.orderId + "?code=shj0Rkq93vQ0jHmV8Z8alfUCcQrHdysOaZBw0od/8yD4/chO3LwAyg==");
                     }}>下載入數紙</Text>
+              <Text style={styles.link}
+                    onPress={() => {
+                      generateQrCode(item);
+                    }}>顯示QR碼</Text>
             </View>
           )}
         />

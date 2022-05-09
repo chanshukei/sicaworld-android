@@ -24,6 +24,7 @@
     },
     "android": {
       "package": "com.sicaworld.sicaworld",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
